@@ -66,9 +66,9 @@ for file in *; do
         continue
     fi
 
-    year=$(stat -f "%Sm" -t "%Y" "${file}")
-    month=$(stat -f "%Sm" -t "%m" "${file}")
-    day=$(stat -f "%Sm" -t "%d" "${file}")
+    year=$(stat -f "%SB" -t "%Y" "${file}")
+    month=$(stat -f "%SB" -t "%m" "${file}")
+    day=$(stat -f "%SB" -t "%d" "${file}")
     next_day=$(date +%Y-%m-%d -d "${year}-${month}-${day} + 1 day" 2>/dev/null)
 
     if [ "${next_day}" = "" ]; then
@@ -89,9 +89,9 @@ for file in *; do
     fi
 
     if [ "${copy}" -eq "0" ]; then
-        find . -path "${dest}" -prune -o -type f -name "${filter}" -newermt "${year}-${month}-${day}" ! -newermt "${next_day}" -exec mv {} "${dest}" \;
+        find . -path "${dest}" -prune -o -type f -name "${filter}" -newerBt "${year}-${month}-${day}" ! -newerBt "${next_day}" -exec mv -n {} "${dest}" \;
     else    
-        find . -path "${dest}" -prune -o -type f -name "${filter}" -newermt "${year}-${month}-${day}" ! -newermt "${next_day}" -exec cp -p {} "${dest}" \;
+        find . -path "${dest}" -prune -o -type f -name "${filter}" -newerBt "${year}-${month}-${day}" ! -newerBt "${next_day}" -exec cp -p {} "${dest}" \;
     fi
     
 done
